@@ -1,0 +1,51 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "query-store-quay-logs.fullname" . }}
+  labels:
+    app: {{ template "query-store-quay-logs.name" . }}
+    chart: {{ template "query-store-quay-logs.chart" . }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  schedule: "{{ .Values.schedule }}"
+  successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.failedJobsHistoryLimit }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    metadata:
+      labels:
+        app: {{ template "query-store-quay-logs.name" . }}
+        chart: {{ template "query-store-quay-logs.chart" . }}
+        cronjob-name: {{ template "query-store-quay-logs.fullname" . }}
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ .Chart.Name }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              env:
+                - name: QUAY_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "query-store-quay-logs.fullname" . }}
+                      key: quay-token
+                - name: AZURE_STORAGE_ACCOUNT
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "query-store-quay-logs.fullname" . }}
+                      key: azure-storage-account
+                - name: AZURE_STORAGE_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "query-store-quay-logs.fullname" . }}
+                      key: azure-storage-access-key
+                - name: AZURE_CONTAINER
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "query-store-quay-logs.fullname" . }}
+                      key: container
+          restartPolicy: Never
