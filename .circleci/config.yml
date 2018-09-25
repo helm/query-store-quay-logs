@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  build:
+    working_directory: /go/src/github.com/helm/query-store-quay-logs
+    docker:
+      - image: circleci/golang:1.10
+    steps:
+      - checkout
+      - run: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+      - run: dep ensure
+      - run: go test -v
+  lint-charts:
+    docker:
+      - image: quay.io/helmpack/chart-testing:v1.1.0
+    steps:
+      - checkout
+      - run:
+          name: "lint chart"
+          command: |
+            chart_test.sh --config .testenv --no-install
+workflows:
+  version: 2
+  lint:
+    jobs:
+      - build
+      - lint-charts
