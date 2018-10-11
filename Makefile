@@ -7,8 +7,8 @@ build:
 .PHONY: docker-build
 docker-build:
 	GOOS=linux GOARCH=amd64 go build -o build/query-store-quay-logs *.go
-	docker build -t mattfarina/query-store-quay-logs:$(VERSION) .
+	docker build -t quay.io/helmpack/query-store-quay-logs:$(VERSION) .
 
 .PHONY: docker-push
 docker-push:
-	docker push mattfarina/query-store-quay-logs
+	docker push quay.io/helmpack/query-store-quay-logs

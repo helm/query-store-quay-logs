@@ -6,9 +6,14 @@ jobs:
       - image: circleci/golang:1.10
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 17.09.0-ce
       - run: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
       - run: dep ensure
       - run: go test -v
+      - run:
+          name: build push image
+          command: ./build.sh
   lint-charts:
     docker:
       - image: quay.io/helmpack/chart-testing:v1.1.0
