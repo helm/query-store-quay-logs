@@ -1,8 +1,8 @@
 apiVersion: v1
-appVersion: "0.0.1"
+appVersion: "0.1.0"
 description: Query logs from Quay and stick them in Azure blob store once a day
 name: query-store-quay-logs
-version: 0.0.2
+version: 0.1.0
 home: https://github.com/helm/query-store-quay-logs
 maintainers:
 - name: mattfarina

@@ -1,6 +1,6 @@
 image:
-  repository: mattfarina/query-store-quay-logs
-  tag: 0.0.1
+  repository: quay.io/helmpack/query-store-quay-logs
+  tag: 0.1.0
   pullPolicy: IfNotPresent
 
 ## cronjob history
