@@ -49,6 +49,9 @@ func main() {
 	// rotation of them.
 	quayToken := envOrErr("QUAY_TOKEN")
 
+	// The repo in the form "org/repo" or "user/repo".
+	quayRepo := envOrErr("QUAY_REPO")
+
 	// Construct a URL
 	tod := time.Now()
 	yesterday := tod.AddDate(0, 0, -1)
@@ -59,7 +62,7 @@ func main() {
 	// TODO(mattfarina): Support Quay enterprise
 	// Note, this is getting the aggregated logs. The raw query logs should be kept
 	// private because they have details, such as IPs, for every request.
-	uQuay := "https://quay.io/api/v1/repository/helmpack/chart-testing/aggregatelogs"
+	uQuay := fmt.Sprintf("https://quay.io/api/v1/repository/%s/aggregatelogs", quayRepo)
 
 	// Note, when the end date is the same as the start date it will increment it
 	// by a day for you.
@@ -70,7 +73,7 @@ func main() {
 	req, err := http.NewRequest("GET", u.String(), nil)
 	handleErr(err)
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", quayToken))
-	req.Header.Set("User-Agent", "query-store-quay-logs/0.0.1") // sending a user agent for Quays benefit
+	req.Header.Set("User-Agent", "query-store-quay-logs/0.1.1") // sending a user agent for Quays benefit
 
 	// Query and handle the things
 	resp, err := client.Do(req)
