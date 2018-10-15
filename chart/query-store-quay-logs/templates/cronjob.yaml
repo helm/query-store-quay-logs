@@ -33,6 +33,11 @@ spec:
                     secretKeyRef:
                       name: {{ template "query-store-quay-logs.fullname" . }}
                       key: quay-token
+                - name: QUAY_REPO
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "query-store-quay-logs.fullname" . }}
+                      key: quay-repo
                 - name: AZURE_STORAGE_ACCOUNT
                   valueFrom:
                     secretKeyRef:
